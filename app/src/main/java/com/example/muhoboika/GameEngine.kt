@@ -11,6 +11,7 @@ class GameEngine: Contract.GameEngine {
     private val random: Random = Random()
     private var score = 0
     private val handler: Handler = Handler()
+
     private val showNewAntTask: Runnable = object: Runnable {
         override fun run() {
             val newAnt = createNewAnt()

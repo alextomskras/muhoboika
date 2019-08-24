@@ -13,6 +13,7 @@ interface Contract {
     }
 
     interface GameEngine {
+
         fun onViewAttached(view: GameView)
         fun onViewDetached()
         fun onPlayButtonClicked()

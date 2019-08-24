@@ -1,9 +1,10 @@
 package com.example.muhoboika
 
 import android.graphics.drawable.Drawable
-import android.support.v7.app.AppCompatActivity
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.TypedValue
 import android.view.View
@@ -21,26 +22,29 @@ class MainActivity : AppCompatActivity(), Contract.GameView  {
 
     private val gameEngine: GameEngine = GameEngine()
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
+
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        gameLayout = findViewById(R.id.game_layout) as FrameLayout
+        gameLayout = findViewById<FrameLayout>(R.id.game_layout)
         playButton = findViewById(R.id.play_button)
         introText = findViewById(R.id.intro_text)
         gameOverText = findViewById(R.id.game_over)
-        score = findViewById(R.id.score) as TextView
+        score = findViewById<TextView>(R.id.score)
 
         playButton!!.setOnClickListener(object: View.OnClickListener {
             override fun onClick(v: View?) {
                 gameEngine.onPlayButtonClicked()
+
             }
 
         })
 
-        val d = Drawable.createFromStream(getAssets().open("bg.jpeg"), null);
+        val d = Drawable.createFromStream(assets.open("bg.jpeg"), null)
         gameLayout?.background = d
 
         gameEngine.onViewAttached(this)
@@ -57,6 +61,7 @@ class MainActivity : AppCompatActivity(), Contract.GameView  {
             override fun onClick(v: View?) {
                 val ant = v!!.tag as Ant
                 gameEngine.onAntClicked(ant)
+
             }
         })
         val antSize =
@@ -72,6 +77,7 @@ class MainActivity : AppCompatActivity(), Contract.GameView  {
 
     override fun hideAnt(antToHide: Ant) {
         val antViewsCount: Int? = gameLayout?.childCount
+        val shleppPlayer = MediaPlayer.create(this, R.raw.shlepp1)
 
         antViewsCount?.let {
 
@@ -79,6 +85,7 @@ class MainActivity : AppCompatActivity(), Contract.GameView  {
                 val view = gameLayout?.getChildAt(i)
                 val tempAnt = view?.tag
                 if (antToHide == (tempAnt)) {
+                    shleppPlayer.start()
                     gameLayout?.removeView(view)
                     break
                 }
