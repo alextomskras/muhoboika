@@ -1,9 +1,15 @@
 package com.example.muhoboika
 
+import android.content.Context
+import android.media.MediaPlayer
 import android.os.Handler
+import android.widget.Toast
 import java.util.*
 
+
 class GameEngine: Contract.GameEngine {
+
+    // For making a noise
 
     private var gameView: Contract.GameView? = null
 
@@ -45,6 +51,7 @@ class GameEngine: Contract.GameEngine {
     }
 
     override fun onPlayButtonClicked() {
+
         gameView?.setPlayButtonVisibility(false)
         gameView?.clearView()
         // start new game
@@ -64,6 +71,7 @@ class GameEngine: Contract.GameEngine {
         val x = getAntXposition()
         val y = getAntYposition()
         val id = ants.size + 1
+
         return Ant(id, x, y)
     }
 
@@ -80,6 +88,22 @@ class GameEngine: Contract.GameEngine {
     private fun getAntXposition(): Double {
         return random.nextDouble()
     }
+
+    companion object {
+
+
+        fun playSound(context: Context, isStart: String) {
+            val worldPlayer = MediaPlayer.create(context, R.raw.utinye)
+            Toast.makeText(context, "Get-Pla:" + isStart + context, Toast.LENGTH_LONG).show()
+            if (isStart.equals("Start")) {
+                worldPlayer.start()
+            } else {
+                worldPlayer.reset()
+                Toast.makeText(context, "Try-Stop:" + isStart, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
 
 }
 

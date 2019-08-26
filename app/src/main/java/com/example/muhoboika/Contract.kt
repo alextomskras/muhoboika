@@ -18,5 +18,7 @@ interface Contract {
         fun onViewDetached()
         fun onPlayButtonClicked()
         fun onAntClicked(ant: Ant)
+
+
     }
 }

@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 
 class MainActivity : AppCompatActivity(), Contract.GameView  {
 
@@ -19,6 +20,9 @@ class MainActivity : AppCompatActivity(), Contract.GameView  {
     private var introText: View? = null
     private var gameOverText: View? = null
     private var score: TextView? = null
+    //    private var mp: MediaPlayer? = null
+    private var mp: MediaPlayer? = null
+
 
     private val gameEngine: GameEngine = GameEngine()
 
@@ -30,14 +34,21 @@ class MainActivity : AppCompatActivity(), Contract.GameView  {
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
+
         gameLayout = findViewById<FrameLayout>(R.id.game_layout)
         playButton = findViewById(R.id.play_button)
         introText = findViewById(R.id.intro_text)
         gameOverText = findViewById(R.id.game_over)
         score = findViewById<TextView>(R.id.score)
+        var mp = MediaPlayer.create(this, R.raw.uh)
+        var position = 0
 
         playButton!!.setOnClickListener(object: View.OnClickListener {
             override fun onClick(v: View?) {
+                if (mp.isPlaying == false) {
+                    mp.seekTo(position)
+                    mp.start()
+                }
                 gameEngine.onPlayButtonClicked()
 
             }
@@ -46,6 +57,7 @@ class MainActivity : AppCompatActivity(), Contract.GameView  {
 
         val d = Drawable.createFromStream(assets.open("bg.jpeg"), null)
         gameLayout?.background = d
+
 
         gameEngine.onViewAttached(this)
 
@@ -60,6 +72,7 @@ class MainActivity : AppCompatActivity(), Contract.GameView  {
         antView.setOnClickListener(object: View.OnClickListener {
             override fun onClick(v: View?) {
                 val ant = v!!.tag as Ant
+
                 gameEngine.onAntClicked(ant)
 
             }
@@ -72,6 +85,7 @@ class MainActivity : AppCompatActivity(), Contract.GameView  {
         val screenHeight = gameLayout!!.height - antSize
         layoutParams.leftMargin = (ant.x * screenWidth).toInt()
         layoutParams.topMargin = (ant.y * screenHeight).toInt()
+
         gameLayout?.addView(antView, layoutParams)
     }
 
@@ -95,17 +109,58 @@ class MainActivity : AppCompatActivity(), Contract.GameView  {
     }
 
     override fun setPlayButtonVisibility(visible: Boolean) {
+
+//        mp = MediaPlayer.create(this, R.raw.utinye)
+//        mp.start ()
+
         playButton?.visibility = if (visible) View.VISIBLE else View.GONE
+        var isStart = "Stop"
+        Toast.makeText(applicationContext, "clearView-Pla:" + isStart, Toast.LENGTH_LONG).show()
+
+//        GameEngine.playSound(this, isStart = isStart)
     }
 
     override fun clearView() {
         gameLayout?.removeAllViews()
         introText?.visibility = View.GONE
         gameOverText?.visibility = View.GONE
+//        mp = MediaPlayer.create(this, R.raw.utinye)
+//
+//        var position = 0
+//        if (mp!!.isPlaying ()) {
+//
+//            mp!!.stop ()
+//        }
+//        Toast.makeText(applicationContext, "STOP",Toast.LENGTH_LONG).show()
+
+
     }
 
     override fun setGameOverVisibility(visible: Boolean) {
+
+//        if (mp!!.isPlaying ()) {
+//
+//            mp!!.stop ()
+//        }
+
+
+//        var position = 0
+
+//        position = mp.getCurrentPosition ()
+        val mp = MediaPlayer.create(this, R.raw.sound08426)
+//        val mp = MediaPlayer.create(this, R.raw.playerexplode)
+        mp.start()
+//        position = 0
+//        mp.seekTo (0)
+
         gameOverText?.visibility = if (visible) View.VISIBLE else View.GONE
+
+//        worldPlayer.isLooping
+//        worldPlayer.stop()
+//        var isStart = "Start"
+//        Toast.makeText(applicationContext, "setGameOverVisibility-Pla:"+ isStart,Toast.LENGTH_LONG).show()
+//        GameEngine.playSound(this, isStart = isStart)
+
     }
 
     override fun setIntroTextVisibility(visible: Boolean) {
@@ -114,5 +169,10 @@ class MainActivity : AppCompatActivity(), Contract.GameView  {
 
     override fun showScore(score: Int) {
         this.score?.text = "Points: " + score
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mp!!.release()
     }
 }
